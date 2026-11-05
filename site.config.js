@@ -86,10 +86,10 @@ window.SITE = {
     // ─── "View Curriculum" pop-up ───────────────────────────────────────
     curriculum: {
       title: "Statistical Options Trading Program",
-      subtitle: "Basics to Advanced · 6 Modules · 2 Weeks · ₹20,000",
+      subtitle: "Basics to Advanced · 6 Modules · 2 Weeks",
       facts: [
         ["Duration", "2 Weeks"],
-        ["Fees", "₹20,000 + GST"],
+        ["Level", "Basics → Advanced"],
         ["Format", "Live + Recorded"],
       ],
       benefits: [
@@ -119,8 +119,8 @@ window.SITE = {
           "Hedging", "Stop Loss & Trail SL Mechanics" ] },
       ],
       note: "Options trading involves market risk. The program teaches a statistical framework — past performance and educational examples do not guarantee future returns.",
-      enrollLabel: "Enroll Now — ₹20,000",
-      enrollLink: "https://forms.gle/f83wDqZDcqLfhf6v9",
+      enrollLabel: "Enroll Now",
+      enrollLink: "https://superprofile.bio/course/a46d738e-80c2-464f-8db3-c65ad39a0d3c",
     },
     cta: "View Curriculum",
   },
