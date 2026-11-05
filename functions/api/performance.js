@@ -6,21 +6,29 @@
 //
 // ─── SETTINGS YOU MAY WANT TO CHANGE ─────────────────────────────────────────
 // You can also set these in Cloudflare (Pages → Settings → Variables) instead
-// of editing this file: SHEET_ID, PERF_GID, OVERRIDE_TAB, CAPITAL, CACHE_SECONDS
+// of editing this file: SHEET_ID, PERF_TAB, PERF_GID, OVERRIDE_TAB, CAPITAL, CACHE_SECONDS
+//
+// HOW THE SHEET IS READ (first one that works wins):
+//   1. GOOGLE_SERVICE_ACCOUNT secret (service-account JSON) — works even when
+//      "viewers can't download" is on. Share the sheet with that account's email.
+//   2. GOOGLE_API_KEY secret (Google Sheets API key) — sheet shared "Anyone with link".
+//   3. Public sheet links (only if downloading is allowed for viewers).
 const DEFAULTS = {
   SHEET_ID: "17cfDVer-_asbVh2n-GQQEr6pzwi67_j93nmq8z9OeYs", // Account Automation Description_1Cr
-  PERF_GID: "874859976",          // tab "Normalized Performance 2026"
+  PERF_TAB: "Normalized Performance 2026",
+  PERF_GID: "874859976",          // same tab's gid (used by public-link fallback)
   OVERRIDE_TAB: "Website",        // optional tab with key | value rows (see README)
   CAPITAL: "3500000",             // capital shown under "Net PnL" and used for the strategy card
   CACHE_SECONDS: "300",           // how long a result is reused (5 minutes)
 };
+const SECRETS = ["GOOGLE_SERVICE_ACCOUNT", "GOOGLE_API_KEY"];
 
 // Column positions in the performance tab (A = 0, B = 1, ...)
 const COL = { date: 0, netPnl: 7, pctReturn: 8 };
 // ─────────────────────────────────────────────────────────────────────────────
 
 export async function onRequestGet(context) {
-  const env = { ...DEFAULTS, ...pick(context.env, Object.keys(DEFAULTS)) };
+  const env = { ...DEFAULTS, ...pick(context.env, Object.keys(DEFAULTS).concat(SECRETS)) };
   const url = new URL(context.request.url);
   const fresh = url.searchParams.has("fresh");
 
@@ -42,17 +50,12 @@ export async function onRequestGet(context) {
 }
 
 export async function buildPerformance(env, fetchImpl = fetch) {
-  const csvUrl = `https://docs.google.com/spreadsheets/d/${env.SHEET_ID}/export?format=csv&gid=${env.PERF_GID}`;
-  const r = await fetchImpl(csvUrl, { redirect: "follow" });
-  if (!r.ok) throw new Error(`Sheet fetch failed (${r.status}). Is the sheet shared as "Anyone with the link can view"?`);
-  const text = await r.text();
-  if (text.trim().startsWith("<")) throw new Error("Sheet returned a login page. Share it as \"Anyone with the link can view\".");
-
-  const rows = parseCSV(text);
+  const { rows, source } = await readTab(env, env.PERF_TAB, env.PERF_GID, fetchImpl);
   const metrics = computeMetrics(rows, Number(env.CAPITAL));
 
   // Zerodha "verified P&L" link, if one is typed anywhere in the tab
-  const verifiedUrl = (text.match(/https:\/\/console\.zerodha\.com\/verified\/[A-Za-z0-9]+/) || [null])[0];
+  const flat = rows.map(r => r.join(" ")).join("\n");
+  const verifiedUrl = (flat.match(/https:\/\/console\.zerodha\.com\/verified\/[A-Za-z0-9]+/) || [null])[0];
 
   // Optional overrides tab: lets you type an exact value for any metric
   const overrides = await readOverrides(env, fetchImpl);
@@ -66,6 +69,7 @@ export async function buildPerformance(env, fetchImpl = fetch) {
 
   const out = {
     ok: true,
+    source,
     updatedAt: new Date().toISOString(),
     verifiedUrl,
     capital: metrics.capital,
@@ -147,21 +151,78 @@ export function computeMetrics(rows, capital) {
 // ─── Optional "Website" overrides tab ────────────────────────────────────────
 async function readOverrides(env, fetchImpl) {
   if (!env.OVERRIDE_TAB) return {};
-  const u = `https://docs.google.com/spreadsheets/d/${env.SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(env.OVERRIDE_TAB)}`;
   try {
-    const r = await fetchImpl(u);
-    if (!r.ok) return {};
-    const text = await r.text();
-    if (text.trim().startsWith("<")) return {};
+    const { rows } = await readTab(env, env.OVERRIDE_TAB, null, fetchImpl);
     const out = {};
-    for (const [k, v] of parseCSV(text)) {
+    for (const [k, v] of rows) {
       if (!k || v === undefined || v === "") continue;
-      const key = k.trim();
       const n = toNum(v);
-      out[key] = n === null ? v.trim() : n;
+      out[String(k).trim()] = n === null ? String(v).trim() : n;
     }
     return out;
-  } catch { return {}; }
+  } catch { return {}; }   // tab missing → no overrides
+}
+
+// ─── Reading a tab ───────────────────────────────────────────────────────────
+async function readTab(env, tab, gid, fetchImpl) {
+  const errors = [];
+  const range = encodeURIComponent(`'${tab.replace(/'/g, "''")}'!A1:AF`);
+  const api = `https://sheets.googleapis.com/v4/spreadsheets/${env.SHEET_ID}/values/${range}?valueRenderOption=FORMATTED_VALUE`;
+
+  if (env.GOOGLE_SERVICE_ACCOUNT) {
+    try {
+      const token = await googleToken(env.GOOGLE_SERVICE_ACCOUNT, fetchImpl);
+      const r = await fetchImpl(api, { headers: { Authorization: `Bearer ${token}` } });
+      if (r.ok) return { rows: (await r.json()).values || [], source: "service-account" };
+      errors.push(`service account: ${r.status} ${await short(r)}`);
+    } catch (e) { errors.push(`service account: ${e.message}`); }
+  }
+  if (env.GOOGLE_API_KEY) {
+    try {
+      const r = await fetchImpl(`${api}&key=${encodeURIComponent(env.GOOGLE_API_KEY)}`);
+      if (r.ok) return { rows: (await r.json()).values || [], source: "api-key" };
+      errors.push(`api key: ${r.status} ${await short(r)}`);
+    } catch (e) { errors.push(`api key: ${e.message}`); }
+  }
+  const pub = [`https://docs.google.com/spreadsheets/d/${env.SHEET_ID}/gviz/tq?tqx=out:csv&headers=0&sheet=${encodeURIComponent(tab)}`];
+  if (gid) pub.push(`https://docs.google.com/spreadsheets/d/${env.SHEET_ID}/export?format=csv&gid=${gid}`);
+  for (const u of pub) {
+    try {
+      const r = await fetchImpl(u, { redirect: "follow" });
+      const text = await r.text();
+      if (r.ok && !text.trim().startsWith("<")) return { rows: parseCSV(text), source: u.includes("gviz") ? "public-gviz" : "public-export" };
+      errors.push(`public link: ${r.status}`);
+    } catch (e) { errors.push(`public link: ${e.message}`); }
+  }
+  throw new Error(`Could not read tab "${tab}". ${errors.join(" | ")}. ` +
+    `Fix: add a GOOGLE_SERVICE_ACCOUNT secret in Cloudflare (see README), or allow viewers to download the sheet.`);
+}
+async function short(r) { try { return (await r.text()).slice(0, 160).replace(/\s+/g, " "); } catch { return ""; } }
+
+// Service-account login (signed JWT → access token), cached ~55 minutes
+let TOKEN = null;
+async function googleToken(saJson, fetchImpl) {
+  if (TOKEN && TOKEN.exp > Date.now() + 60000) return TOKEN.value;
+  const sa = typeof saJson === "string" ? JSON.parse(saJson) : saJson;
+  const now = Math.floor(Date.now() / 1000);
+  const b64u = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  const enc = (o) => b64u(new TextEncoder().encode(JSON.stringify(o)));
+  const unsigned = `${enc({ alg: "RS256", typ: "JWT" })}.${enc({
+    iss: sa.client_email, scope: "https://www.googleapis.com/auth/spreadsheets.readonly",
+    aud: "https://oauth2.googleapis.com/token", iat: now, exp: now + 3600,
+  })}`;
+  const pem = sa.private_key.replace(/-----[^-]+-----/g, "").replace(/\s+/g, "");
+  const der = Uint8Array.from(atob(pem), (c) => c.charCodeAt(0));
+  const key = await crypto.subtle.importKey("pkcs8", der, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, false, ["sign"]);
+  const sig = await crypto.subtle.sign("RSASSA-PKCS1-v1_5", key, new TextEncoder().encode(unsigned));
+  const r = await fetchImpl("https://oauth2.googleapis.com/token", {
+    method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${unsigned}.${b64u(sig)}`,
+  });
+  const j = await r.json();
+  if (!j.access_token) throw new Error(`token: ${j.error_description || j.error || r.status}`);
+  TOKEN = { value: j.access_token, exp: Date.now() + (j.expires_in || 3600) * 1000 };
+  return TOKEN.value;
 }
 
 // ─── Nifty 50 benchmark ──────────────────────────────────────────────────────

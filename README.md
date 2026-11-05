@@ -33,7 +33,18 @@ The site reads tab **Normalized Performance 2026** of
 - **Zerodha Verified P&L** button uses any `console.zerodha.com/verified/...` link typed in that tab
 - **Nifty 50** line is fetched automatically for the same dates
 
-The sheet must be shared as **Anyone with the link → Viewer**.
+**Access to the sheet.** Your sheet has *"viewers can't download"* turned on, which blocks
+public links. So the site logs in with a Google **service account** instead:
+
+1. Use a service account you already have (its JSON key file) or create one in Google Cloud
+   (IAM → Service accounts → Keys → Add key → JSON). Enable the *Google Sheets API* in that project.
+2. Share the sheet with the service account's email (`...@...iam.gserviceaccount.com`) as **Viewer**.
+3. Cloudflare → your Pages project → **Settings → Variables and secrets → Add** →
+   Type **Secret**, name `GOOGLE_SERVICE_ACCOUNT`, value = the whole JSON file contents. Save.
+4. **Deployments → ⋯ on the latest → Retry deployment**.
+
+Alternatives: a `GOOGLE_API_KEY` secret (sheet shared "Anyone with the link"), or allow
+viewers to download the sheet. `/api/performance` shows which method worked in `"source"`.
 Results are cached for 5 minutes. Add `?fresh` to `/api/performance` to force a refresh.
 
 ### Want to type an exact number yourself?
