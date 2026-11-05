@@ -62,6 +62,7 @@
     </div></div>`;
 
   if (!isHome) return; // legal pages stop here
+  const hashOpeners = {};
 
   // Each section is drawn separately, so a typo in one part of site.config.js
   // can't stop the rest of the page (or the live numbers) from loading.
@@ -182,19 +183,56 @@
     dlg.querySelector(".modal-x").onclick = close;
     dlg.addEventListener("click", (e) => { if (e.target === dlg) close(); });   // click outside closes
     if (S.links.curriculum === "#curriculum") $("curr-btn").addEventListener("click", (e) => { e.preventDefault(); open(); });
-    if (location.hash === "#curriculum") open();                                 // shareable link
+    hashOpeners["#curriculum"] = open;                                          // shareable link
   }
   });
 
-  // ─── About ───────────────────────────────────────────────────────────────
+  // ─── About (pop-up with team; each card opens a profile pop-up) ─────────
   safe("About", () => {
   const B = S.about;
-  $("about").innerHTML = `
+  const initials = (n) => n.replace(/^CA\s+/, "").split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+  const avatar = (p, cls = "avatar") => p.photo
+    ? `<img class="${cls} ph" src="${esc(p.photo)}" alt="${esc(p.name)}">`
+    : `<div class="${cls}">${esc(initials(p.name))}</div>`;
+  const about = modal("about", "modal-wide", `
     <span class="badge">${esc(B.badge)}</span>
-    <h2>${esc(B.titleA)} <span class="g">${esc(B.titleB)}</span></h2>
-    <p class="sub">${esc(B.text)}</p>
-    <div class="team">${B.team.map((p) => `<div class="card person"><div class="avatar">${esc(p.name.replace(/^CA\s+/, "").split(" ").map((w) => w[0]).slice(0, 2).join(""))}</div><div><h4>${esc(p.name)}</h4><div class="role">${esc(p.role)}</div><div class="bio">${esc(p.bio)}</div></div></div>`).join("")}</div>`;
+    <h3 style="margin-top:14px">${esc(B.titleA)} <span class="g">${esc(B.titleB)}</span></h3>
+    <p class="modal-lead">${esc(B.text)}</p>
+    <div class="team-grid">${B.team.map((p, i) => `<div class="tcard">
+      <div class="thead">${avatar(p)}<div><h4>${esc(p.name)}</h4><div class="texp">${esc(p.exp)}</div></div></div>
+      <div class="trole">${esc(p.role)}</div>
+      <ul class="tpts">${p.points.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
+      <button class="btn btn-ghost btn-sm tbtn" data-i="${i}">View profile ${I.arrow}</button></div>`).join("")}</div>`);
+  const prof = modal("profile", "", "");
+  about.el.addEventListener("click", (e) => {
+    const b = e.target.closest(".tbtn"); if (!b) return;
+    const p = B.team[+b.dataset.i];
+    prof.body.innerHTML = `
+      <div class="phead">${avatar(p, "avatar avatar-lg")}<div><h3>${esc(p.name)}</h3><div class="trole">${esc(p.role)}</div><div class="texp">${esc(p.exp)}</div></div></div>
+      <p class="pbio">${esc(p.bio)}</p>
+      <h4>Key Highlights</h4>
+      <ul class="ticks">${p.points.map((x) => `<li>${I.shield}<span>${esc(x)}</span></li>`).join("")}</ul>
+      <button class="btn btn-ghost btn-sm" style="margin-top:22px" data-close>← Back to team</button>`;
+    prof.open();
   });
+  hashOpeners["#about"] = about.open;
+  });
+
+  // ─── Pop-up helper + links like "#about" / "#curriculum" open pop-ups ───
+  function modal(id, cls, html) {
+    const d = document.createElement("dialog");
+    d.className = "modal " + cls; d.id = id;
+    d.innerHTML = `<div class="modal-in"><button class="modal-x" aria-label="Close">✕</button><div class="modal-body">${html}</div></div>`;
+    document.body.appendChild(d);
+    const open = () => { if (!d.open) d.showModal(); document.body.style.overflow = "hidden"; d.querySelector(".modal-in").scrollTop = 0; };
+    const close = () => d.close();
+    d.addEventListener("close", () => {
+      if (!document.querySelector("dialog[open]")) document.body.style.overflow = "";
+      if (location.hash === "#" + id) history.replaceState(null, "", location.pathname);
+    });
+    d.addEventListener("click", (e) => { if (e.target === d || e.target.closest(".modal-x,[data-close]")) close(); });
+    return { el: d, body: d.querySelector(".modal-body"), open, close };
+  }
 
   // ─── CTA ─────────────────────────────────────────────────────────────────
   safe("CTA", () => {
@@ -203,6 +241,13 @@
     <h2>${esc(C.titleA)}<br><span class="g">${esc(C.titleB)}</span><br>${esc(C.titleC)}</h2>
     <p>${esc(C.text)}</p>${btn(S.links.bookCall, C.button)}</div>`;
   });
+
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]'); if (!a) return;
+    const fn = hashOpeners[a.getAttribute("href")];
+    if (fn) { e.preventDefault(); $("navlinks").classList.remove("open"); fn(); }
+  });
+  if (hashOpeners[location.hash]) hashOpeners[location.hash]();
 
   // ─── Live data ───────────────────────────────────────────────────────────
   fetch("/api/performance").then((r) => r.json()).then(fill).catch(() => {

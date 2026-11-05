@@ -123,14 +123,50 @@ window.SITE = {
     cta: "View Curriculum",
   },
 
+  // ─── "About" pop-up (opens from the About link in the menu and footer) ──
+  // To add a photo: put the image in assets/team/ and set photo: "assets/team/name.jpg"
   about: {
     badge: "About",
     titleA: "Built by",
     titleB: "quants, for traders.",
     text: "Proption Fintech is a quant-led research and education firm from Udaipur. We combine statistics, data and disciplined execution to help traders make better decisions.",
     team: [
-      { name: "Ruchin Tejawat", role: "Founder · Quant Research", bio: "Alumnus, IIT Kanpur · Research Associate, IIM Udaipur" },
-      { name: "CA Prachi Mehta", role: "SEBI Registered Research Analyst", bio: "Reg. No. INH000017879" },
+      {
+        name: "Kishore Kumar", exp: "15+ years of experience",
+        role: "Senior Software Engineer | Trading Systems & Infrastructure", photo: "",
+        points: ["Ex — Wipro / Honeywell", "Deep experience with broker APIs", "Designed distributed algo execution", "Strong DevOps exposure"],
+        bio: "Kishore brings over 15 years of deep hands-on experience in designing, building, and maintaining automated trading infrastructure. Having worked at global technology leaders like Wipro and Honeywell, he specializes in broker API integrations, distributed algorithmic execution engines, and robust DevOps practices that keep mission-critical trading systems running 24/7.",
+      },
+      {
+        name: "CA Prachi Mehta", exp: "8+ years of experience",
+        role: "Chartered Accountant | SEBI Registered Research Analyst", photo: "",
+        points: ["SEBI RA — INH000017879", "Ex. Hedge Fund Admin (Citco, Morgan Stanley)", "Expertise in Cash Market Portfolios", "Designing Swing & Long-Term Investing Systems"],
+        bio: "A Chartered Accountant and SEBI Registered Research Analyst (INH000017879), Prachi has spent over 8 years at the intersection of finance, compliance, and fund administration. Her prior roles at Citco and Morgan Stanley gave her an insider's view into hedge fund operations, cash-market portfolio construction, and the design of disciplined swing and long-term investing frameworks.",
+      },
+      {
+        name: "Ruchin Tejawat", exp: "12+ years of experience",
+        role: "Real-Time Trading Strategist | Quant Research", photo: "",
+        points: ["Alumnus — IIT Kanpur", "Research Associate — IIM Udaipur", "Statistical Designing of Options Trading Systems", "Managing Different Risk Profiles"],
+        bio: "An IIT Kanpur alumnus and Research Associate at IIM Udaipur, Ruchin combines academic rigor with 12+ years of live-market experience. His expertise lies in the statistical design of options trading systems, dynamic risk profiling, and translating quantitative research into profitable, real-time execution strategies.",
+      },
+      {
+        name: "Aviroop", exp: "2 years of experience",
+        role: "Developer | Front End & Backend", photo: "",
+        points: ["MongoDB, Express, Redis, Node.js", "Experience in AI/ML Projects"],
+        bio: "Aviroop is a full-stack developer who builds the dashboards, data pipelines and client-facing tools behind Proption's research and execution systems. Working across MongoDB, Express, Redis and Node.js, he turns trading logic into fast, reliable software, and brings hands-on experience from AI/ML projects to the team's analytics work.",
+      },
+      {
+        name: "SoumyaDeep", exp: "2 years of experience",
+        role: "Developer | Front End & Backend", photo: "",
+        points: ["MongoDB, Express, Redis, Node.js"],
+        bio: "SoumyaDeep is a full-stack developer focused on building clean, responsive interfaces and dependable back-end services. Using MongoDB, Express, Redis and Node.js, he helps ship and maintain the platforms that clients and the research team rely on every trading day.",
+      },
+      {
+        name: "Anurag", exp: "4–5 years of experience",
+        role: "Developer | Front End & Backend", photo: "",
+        points: ["MongoDB, Express, Redis, Node.js"],
+        bio: "With 4–5 years of full-stack development experience, Anurag designs and builds scalable web applications and APIs on MongoDB, Express, Redis and Node.js. He focuses on performance, stability and clean architecture, keeping Proption's systems fast and dependable as they grow.",
+      },
     ],
   },
 
