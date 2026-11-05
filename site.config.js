@@ -75,8 +75,8 @@ window.SITE = {
       { icon: "users", strong: "", text: "Cohort + community" },
       { icon: "shield", strong: "", text: "Mentored by quant experts" },
     ],
-    fee: "₹20,000",
-    feeNote: "+ GST · one-time",
+    fee: "",            // leave empty to hide the fee; e.g. "₹20,000"
+    feeNote: "",        // e.g. "+ GST · one-time"
     details: [
       ["Duration", "2 weeks"],
       ["Modules", "6"],

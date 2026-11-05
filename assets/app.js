@@ -152,9 +152,8 @@
       <div><span class="chip">${esc(A.tag)}</span><h3>${esc(A.name)}</h3><p>${esc(A.text)}</p>${feats(A.features)}
       </div>
       <div class="side">
-        <div class="k-label">Program Fee</div>
-        <div class="big">${esc(A.fee)}</div>
-        <div class="note">${esc(A.feeNote)}</div>
+        ${A.fee ? `<div class="k-label">Program Fee</div><div class="big">${esc(A.fee)}</div><div class="note">${esc(A.feeNote || "")}</div>`
+                : `<div class="k-label" style="margin-bottom:12px">Program Details</div>`}
         ${A.details.map(([k, v]) => `<div class="kv"><span>${esc(k)}</span><span>${esc(v)}</span></div>`).join("")}
         <a class="btn btn-primary btn-block" id="curr-btn" href="${esc(link(S.links.curriculum))}"${ext(S.links.curriculum)}>${esc(A.cta)} ${I.arrow}</a>
       </div>
