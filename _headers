@@ -4,4 +4,7 @@
   Referrer-Policy: strict-origin-when-cross-origin
 
 /assets/*
-  Cache-Control: public, max-age=3600
+  Cache-Control: public, max-age=0, must-revalidate
+
+/site.config.js
+  Cache-Control: public, max-age=0, must-revalidate

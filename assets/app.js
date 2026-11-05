@@ -63,7 +63,12 @@
 
   if (!isHome) return; // legal pages stop here
 
+  // Each section is drawn separately, so a typo in one part of site.config.js
+  // can't stop the rest of the page (or the live numbers) from loading.
+  const safe = (name, fn) => { try { fn(); } catch (e) { console.error(`[site] "${name}" section failed:`, e); } };
+
   // ─── Hero ────────────────────────────────────────────────────────────────
+  safe("Hero", () => {
   const H = S.hero;
   $("hero").innerHTML = `
     <div>
@@ -88,8 +93,10 @@
     <div><div class="k-label">Sharpe Ratio</div><div class="k-val white" data-k="sharpe">—</div><div class="k-sub">risk-adjusted</div></div>
     <div><div class="k-label">Win Rate</div><div class="k-val" data-k="winRate">—</div><div class="k-sub" data-k="rrNote">&nbsp;</div></div>
   </div>`;
+  });
 
   // ─── Performance ─────────────────────────────────────────────────────────
+  safe("Performance", () => {
   const P = S.performance;
   $("performance").innerHTML = `
     <span class="badge">${I.chart}${esc(P.badge)}</span>
@@ -111,8 +118,10 @@
         .map(([l, k]) => `<div class="tile"><div class="k-label">${l}</div><div class="tv" data-k="${k}">—</div></div>`).join("")}
     </div>
     <div class="live-note"><i class="live-dot"></i><span id="updated">Live data · auto-synced from verified Zerodha P&amp;L</span></div>`;
+  });
 
   // ─── Quant Strategies ─────────────────────────────────────────────────────────────────
+  safe("Quant Strategies", () => {
   const M = S.strategy;
   $("strategies").innerHTML = `
     <span class="badge">${esc(M.badge)}</span>
@@ -130,8 +139,10 @@
         <a class="btn btn-primary btn-block" href="${esc(S.links.bookCall)}"${ext(S.links.bookCall)}>${esc(M.cta)} ${I.arrow}</a>
       </div>
     </div>`;
+  });
 
   // ─── Academy ─────────────────────────────────────────────────────────────
+  safe("Academy", () => {
   const A = S.academy;
   $("academy").innerHTML = `
     <span class="badge orange">${I.book}${esc(A.badge)}</span>
@@ -173,20 +184,25 @@
     if (S.links.curriculum === "#curriculum") $("curr-btn").addEventListener("click", (e) => { e.preventDefault(); open(); });
     if (location.hash === "#curriculum") open();                                 // shareable link
   }
+  });
 
   // ─── About ───────────────────────────────────────────────────────────────
+  safe("About", () => {
   const B = S.about;
   $("about").innerHTML = `
     <span class="badge">${esc(B.badge)}</span>
     <h2>${esc(B.titleA)} <span class="g">${esc(B.titleB)}</span></h2>
     <p class="sub">${esc(B.text)}</p>
     <div class="team">${B.team.map((p) => `<div class="card person"><div class="avatar">${esc(p.name.replace(/^CA\s+/, "").split(" ").map((w) => w[0]).slice(0, 2).join(""))}</div><div><h4>${esc(p.name)}</h4><div class="role">${esc(p.role)}</div><div class="bio">${esc(p.bio)}</div></div></div>`).join("")}</div>`;
+  });
 
   // ─── CTA ─────────────────────────────────────────────────────────────────
+  safe("CTA", () => {
   const C = S.cta;
   $("cta").innerHTML = `<div class="cta-panel">
     <h2>${esc(C.titleA)}<br><span class="g">${esc(C.titleB)}</span><br>${esc(C.titleC)}</h2>
     <p>${esc(C.text)}</p>${btn(S.links.bookCall, C.button)}</div>`;
+  });
 
   // ─── Live data ───────────────────────────────────────────────────────────
   fetch("/api/performance").then((r) => r.json()).then(fill).catch(() => {
