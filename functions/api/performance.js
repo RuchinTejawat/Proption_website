@@ -11,7 +11,7 @@ const DEFAULTS = {
   SHEET_ID: "17cfDVer-_asbVh2n-GQQEr6pzwi67_j93nmq8z9OeYs", // Account Automation Description_1Cr
   PERF_GID: "874859976",          // tab "Normalized Performance 2026"
   OVERRIDE_TAB: "Website",        // optional tab with key | value rows (see README)
-  CAPITAL: "3500000",             // capital shown under "Net PnL" and used for PMS card
+  CAPITAL: "3500000",             // capital shown under "Net PnL" and used for the strategy card
   CACHE_SECONDS: "300",           // how long a result is reused (5 minutes)
 };
 

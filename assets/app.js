@@ -70,7 +70,7 @@
       <span class="badge">${I.shield}${esc(H.badge)}</span>
       <h1><span>${esc(H.line1)}</span><span class="g">${esc(H.line2)}</span><span>${esc(H.line3)}</span><span class="o">${esc(H.line4)}</span></h1>
       <p class="lead">${esc(H.text)}</p>
-      <div class="hero-ctas">${btn("#pms", H.primaryCta)}<a class="btn btn-ghost" href="${esc(S.links.watchDemo)}"${ext(S.links.watchDemo)}>${I.play}${esc(H.secondaryCta)}</a></div>
+      <div class="hero-ctas">${btn("#strategies", H.primaryCta)}<a class="btn btn-ghost" href="${esc(S.links.watchDemo)}"${ext(S.links.watchDemo)}>${I.play}${esc(H.secondaryCta)}</a></div>
       <div class="hero-stats">
         <div><div class="v" data-k="returnPct">—</div><div class="l">1Y Return</div></div>
         <div><div class="v" data-k="netPnl">—</div><div class="l">Net PnL</div></div>
@@ -112,9 +112,9 @@
     </div>
     <div class="live-note"><i class="live-dot"></i><span id="updated">Live data · auto-synced from verified Zerodha P&amp;L</span></div>`;
 
-  // ─── PMS ─────────────────────────────────────────────────────────────────
-  const M = S.pms;
-  $("pms").innerHTML = `
+  // ─── Quant Strategies ─────────────────────────────────────────────────────────────────
+  const M = S.strategy;
+  $("strategies").innerHTML = `
     <span class="badge">${esc(M.badge)}</span>
     <h2>${esc(M.titleA)} <span class="g">${esc(M.titleB)}</span></h2>
     <div class="product" style="margin-top:40px">

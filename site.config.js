@@ -20,7 +20,7 @@ window.SITE = {
 
   nav: [
     { label: "Performance", href: "#performance" },
-    { label: "PMS", href: "#pms" },
+    { label: "Quant Strategies", href: "#strategies" },
     { label: "Academy", href: "#academy" },
     { label: "About", href: "#about" },
   ],
@@ -31,8 +31,8 @@ window.SITE = {
     line2: "capital.",           // green
     line3: "Master the",
     line4: "markets.",           // orange
-    text: "India's research-first fintech delivering institutional-grade PMS strategies and a world-class stock market academy — built by quant experts.",
-    primaryCta: "Explore PMS",
+    text: "India's research-first fintech delivering institutional-grade quant strategies and a world-class stock market academy — built by quant experts.",
+    primaryCta: "Explore Strategies",
     secondaryCta: "Watch Demo",
   },
 
@@ -41,11 +41,11 @@ window.SITE = {
     titleA: "12 months of",
     titleB: "verified alpha.",
     text: "Cumulative net returns of our flagship strategy, independently verified on Zerodha. Past performance is not indicative of future results.",
-    seriesName: "Proption Quant PMS",
+    seriesName: "Proption Quant Strategy",
   },
 
-  pms: {
-    badge: "PMS Strategies",
+  strategy: {
+    badge: "Quant Strategies",
     titleA: "A single, focused",
     titleB: "quant strategy.",
     tag: "Flagship · Intraday Options",
@@ -104,7 +104,7 @@ window.SITE = {
   },
 
   cta: {
-    titleA: "Ready to invest with",
+    titleA: "Ready to trade with",
     titleB: "research-backed",
     titleC: "conviction?",
     text: "Schedule a 30-minute consultation with our team. No obligations.",
@@ -119,7 +119,7 @@ window.SITE = {
 
   footer: {
     company: [
-      ["About Us", "#about"], ["Performance", "#performance"], ["PMS Strategies", "#pms"],
+      ["About Us", "#about"], ["Performance", "#performance"], ["Quant Strategies", "#strategies"],
       ["Academy", "#academy"], ["Contact", "legal/contact.html"],
     ],
     disclosures: [
