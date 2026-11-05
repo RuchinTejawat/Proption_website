@@ -138,7 +138,6 @@
     <h2>${esc(A.titleA)} <span class="o">${esc(A.titleB)}</span></h2>
     <div class="product amber" style="margin-top:40px">
       <div><span class="chip">${esc(A.tag)}</span><h3>${esc(A.name)}</h3><p>${esc(A.text)}</p>${feats(A.features)}
-        <div class="modules" id="modules"><div class="k-label" style="margin-bottom:10px">Curriculum</div><ol>${A.modules.map((m) => `<li>${esc(m)}</li>`).join("")}</ol></div>
       </div>
       <div class="side">
         <div class="k-label">Program Fee</div>
@@ -148,8 +147,31 @@
         <a class="btn btn-primary btn-block" id="curr-btn" href="${esc(link(S.links.curriculum))}"${ext(S.links.curriculum)}>${esc(A.cta)} ${I.arrow}</a>
       </div>
     </div>`;
-  if (S.links.curriculum === "#academy") {
-    $("curr-btn").addEventListener("click", (e) => { e.preventDefault(); $("modules").classList.toggle("open"); });
+  // Curriculum pop-up
+  const CU = A.curriculum;
+  if (CU) {
+    const dlg = document.createElement("dialog");
+    dlg.className = "modal"; dlg.id = "curriculum";
+    dlg.innerHTML = `<div class="modal-in">
+      <button class="modal-x" aria-label="Close">✕</button>
+      <h3>${esc(CU.title)}</h3><div class="modal-sub">${esc(CU.subtitle)}</div>
+      <div class="facts">${CU.facts.map(([k, v]) => `<div><div class="k-label">${esc(k)}</div><div class="fv">${esc(v)}</div></div>`).join("")}</div>
+      <h4>What you'll get</h4>
+      <ul class="ticks">${CU.benefits.map((b) => `<li>${I.shield}<span>${esc(b)}</span></li>`).join("")}</ul>
+      <h4>Curriculum</h4>
+      <div class="mods">${CU.modules.map((m, i) => `<details${i === 0 ? " open" : ""}><summary><span class="mn">Module ${i + 1}</span>${esc(m.title)}</summary>
+        <ol>${m.topics.map((t) => `<li>${esc(t)}</li>`).join("")}</ol></details>`).join("")}</div>
+      <p class="modal-note">${esc(CU.note)}</p>
+      <a class="btn btn-primary btn-block" href="${esc(CU.enrollLink)}" target="_blank" rel="noopener">${esc(CU.enrollLabel)} ${I.arrow}</a>
+    </div>`;
+    document.body.appendChild(dlg);
+    const open = () => { dlg.showModal(); document.body.style.overflow = "hidden"; };
+    const close = () => dlg.close();
+    dlg.addEventListener("close", () => { document.body.style.overflow = ""; if (location.hash === "#curriculum") history.replaceState(null, "", location.pathname); });
+    dlg.querySelector(".modal-x").onclick = close;
+    dlg.addEventListener("click", (e) => { if (e.target === dlg) close(); });   // click outside closes
+    if (S.links.curriculum === "#curriculum") $("curr-btn").addEventListener("click", (e) => { e.preventDefault(); open(); });
+    if (location.hash === "#curriculum") open();                                 // shareable link
   }
 
   // ─── About ───────────────────────────────────────────────────────────────

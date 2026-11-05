@@ -15,7 +15,7 @@ window.SITE = {
   links: {
     bookCall: "https://wa.me/919321474231?text=Hi%2C%20I%27d%20like%20to%20book%20a%20call%20with%20Proption%20Fintech",
     watchDemo: "https://www.youtube.com/",           // ← put your demo video link
-    curriculum: "#academy",                           // or a PDF / form link
+    curriculum: "#curriculum",                        // "#curriculum" opens the pop-up; or put a PDF / form link
     verifiedPnl: "https://console.zerodha.com/verified/c4b578ef", // Zerodha verified P&L (used if the sheet link isn't found)
   },
 
@@ -81,15 +81,45 @@ window.SITE = {
       ["Level", "Basics → Advanced"],
       ["Mode", "Online · Live"],
     ],
-    // Shown when someone clicks "View Curriculum"
-    modules: [
-      "Options basics & payoff thinking",
-      "Probability, distributions and expected value",
-      "Volatility: IV, HV and the expected move",
-      "Greeks in practice",
-      "Position sizing & risk of ruin",
-      "Building and backtesting a rules-based system",
-    ],
+    // ─── "View Curriculum" pop-up ───────────────────────────────────────
+    curriculum: {
+      title: "Statistical Options Trading Program",
+      subtitle: "Basics to Advanced · 6 Modules · 2 Weeks · ₹20,000",
+      facts: [
+        ["Duration", "2 Weeks"],
+        ["Fees", "₹20,000 + GST"],
+        ["Format", "Live + Recorded"],
+      ],
+      benefits: [
+        "Live + recorded sessions by quant experts",
+        "Real, verified trade examples from our flagship strategy",
+        "Statistical & probability-driven approach (not chart guessing)",
+        "Hands-on with option chain, Greeks, IV and position sizing",
+        "Lifetime access to recordings & curriculum updates",
+        "Community access for doubt resolution",
+      ],
+      modules: [
+        { title: "Basics of Options", topics: [
+          "Call vs Put Options", "Strike Price, Premium, Expiry",
+          "Option Buyer vs Seller: Rights & Obligations", "Intrinsic Value & Time Value",
+          "Moneyness: ITM, ATM, OTM" ] },
+        { title: "Analysis of Options", topics: [
+          "Option Chain Analysis", "Concept of Open Interest", "Concept of PCR, Max Pain",
+          "Option Greeks (Delta, Theta, Vega, Gamma, Rho)", "India VIX and IV", "IV Percentile & IV Rank" ] },
+        { title: "Statistical Parameters", topics: [
+          "Normal Distribution", "Z-Score and how it's calculated", "Standard Deviation",
+          "Calculating Probability of Winning", "Volatility", "Expected Value", "Edge Factor",
+          "Law of Large Numbers in Options", "Win Rate vs Risk-Reward vs Drawdown" ] },
+        { title: "Option Strategies (Directional)", topics: ["System 1", "System 2"] },
+        { title: "Option Strategies (Non-Directional)", topics: ["System 1", "System 2"] },
+        { title: "Risk Management & Position Sizing", topics: [
+          "Daily Risk Assessment", "Portfolio Management", "Drawdown Control",
+          "Hedging", "Stop Loss & Trail SL Mechanics" ] },
+      ],
+      note: "Options trading involves market risk. The program teaches a statistical framework — past performance and educational examples do not guarantee future returns.",
+      enrollLabel: "Enroll Now — ₹20,000",
+      enrollLink: "https://forms.gle/f83wDqZDcqLfhf6v9",
+    },
     cta: "View Curriculum",
   },
 
