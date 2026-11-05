@@ -16,6 +16,7 @@ window.SITE = {
     bookCall: "https://wa.me/919321474231?text=Hi%2C%20I%27d%20like%20to%20book%20a%20call%20with%20Proption%20Fintech",
     watchDemo: "https://www.youtube.com/",           // ← put your demo video link
     curriculum: "#academy",                           // or a PDF / form link
+    verifiedPnl: "https://console.zerodha.com/verified/c4b578ef", // Zerodha verified P&L (used if the sheet link isn't found)
   },
 
   nav: [

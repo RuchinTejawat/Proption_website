@@ -189,7 +189,7 @@
     document.querySelectorAll("[data-k]").forEach((el) => { const k = el.dataset.k; if (k in vals) el.textContent = vals[k]; });
     if (s.niftyReturn == null) { $("lg-nifty").style.display = "none"; $("lg-alpha").style.display = "none"; }
     const vl = $("verified-link");
-    if (d.verifiedUrl) vl.href = d.verifiedUrl; else vl.removeAttribute("href");
+    const vu = d.verifiedUrl || S.links.verifiedPnl; if (vu) vl.href = vu; else vl.removeAttribute("href");
     $("updated").textContent = `Live data · auto-synced from verified Zerodha P&L · Last updated ${new Date(d.updatedAt).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" })}`;
     drawChart($("chart"), d.series || [], d.benchmark || []);
   }
