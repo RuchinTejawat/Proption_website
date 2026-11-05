@@ -110,7 +110,7 @@
           <span id="lg-nifty"><i class="dot" style="background:var(--orange)"></i>Nifty 50<b class="o" data-k="niftySigned">—</b></span>
           <span id="lg-alpha">Alpha<b class="g" data-k="alphaSigned">—</b></span>
         </div>
-        <a class="badge" id="verified-link" href="#" target="_blank" rel="noopener">${I.shield}Zerodha Verified P&amp;L</a>
+        <a class="badge" id="verified-link" href="${esc(S.links.performanceLink || "#")}" target="_blank" rel="noopener">${I.chart}${esc(S.links.performanceLabel || "View Performance")}</a>
       </div>
       <div class="chart-wrap" id="chart"><div class="chart-empty">Loading live performance…</div></div>
     </div>
@@ -272,7 +272,7 @@
     document.querySelectorAll("[data-k]").forEach((el) => { const k = el.dataset.k; if (k in vals) el.textContent = vals[k]; });
     if (s.niftyReturn == null) { $("lg-nifty").style.display = "none"; $("lg-alpha").style.display = "none"; }
     const vl = $("verified-link");
-    const vu = d.verifiedUrl || S.links.verifiedPnl; if (vu) vl.href = vu; else vl.removeAttribute("href");
+    const vu = S.links.performanceLink || d.verifiedUrl; if (vu) vl.href = vu; else vl.removeAttribute("href");
     $("updated").textContent = `Live data · auto-synced from verified Zerodha P&L · Last updated ${new Date(d.updatedAt).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" })}`;
     drawChart($("chart"), d.series || [], d.benchmark || []);
   }
