@@ -1,5 +1,5 @@
-// Animated hero: four rotating slides (equity curve, market tape, probability engine, option chain).
-// Text for each slide lives in site.config.js → hero.slides. You normally don't need to edit this file.
+// Section animations: equity curve (hero), market tape + option chain (Quant Strategies), probability engine (Academy).
+// Which animation goes where is set in site.config.js. You normally don't need to edit this file.
 (function () {
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const css = (n, f) => (getComputedStyle(document.documentElement).getPropertyValue(n).trim() || f);
@@ -212,55 +212,28 @@
 
   const FACTORIES = { curve, tape, probability, chain };
 
-  /* ── Slider: rotates slides, syncs copy, tabs and visuals ────────────── */
-  window.ProptionHero = {
-    mount(root, opts) {
-      readColors();
-      const { slides, rotateSeconds = 9, renderCopy } = opts;
-      const copy = root.querySelector(".hero-copy"), stage = root.querySelector(".hero-stage"), tabs = root.querySelector(".hero-tabs");
-      const visuals = slides.map((sl) => {
-        const host = document.createElement("div"); host.className = "hv"; stage.appendChild(host);
-        try { return (FACTORIES[sl.visual] || curve)(host); }
-        catch (err) { console.error("[hero] could not build", sl.visual, err); return { start() {}, stop() {} }; }
-      });
-      copy.innerHTML = slides.map((sl, i) => `<div class="hc" data-i="${i}"></div>`).join("");
-      const layers = [...copy.children];
-      slides.forEach((sl, i) => { layers[i].innerHTML = renderCopy(sl); layers[i].setAttribute("aria-hidden", "true"); });
-      tabs.innerHTML = slides.map((sl, i) => `<button class="hero-tab" type="button" role="tab" aria-selected="false" data-i="${i}"><span>${sl.tab || sl.visual}</span><i class="prog"></i></button>`).join("");
-      const tabEls = [...tabs.children], hosts = [...stage.children];
-      let cur = -1, timer = 0, paused = false, visible = true;
-      const show = (i) => {
-        if (i === cur) return;
-        if (cur >= 0) { try { visuals[cur].stop(); } catch (err) {} hosts[cur].classList.remove("active"); tabEls[cur].classList.remove("active"); tabEls[cur].setAttribute("aria-selected", "false"); layers[cur].classList.remove("active"); layers[cur].setAttribute("aria-hidden", "true"); }
-        cur = i;
-        layers[i].classList.add("active"); layers[i].removeAttribute("aria-hidden");
-        hosts[i].classList.add("active"); tabEls[i].classList.add("active"); tabEls[i].setAttribute("aria-selected", "true");
-        tabEls[i].style.setProperty("--dur", `${rotateSeconds}s`);
-        const prog = tabEls[i].querySelector(".prog"); prog.style.animation = "none"; void prog.offsetWidth; prog.style.animation = "";
-        schedule();
-        if (visible) { try { visuals[i].start(); } catch (err) { console.error("[hero] slide failed:", err); } }
-      };
-      const schedule = () => { clearTimeout(timer); if (reduce || paused || !visible) return; timer = setTimeout(() => show((cur + 1) % slides.length), rotateSeconds * 1000); };
-      tabs.addEventListener("click", (e) => { const b = e.target.closest(".hero-tab"); if (b) show(+b.dataset.i); });
-      // Pause only while the pointer is on the animation itself (not the whole hero), and only on mouse devices
-      const art = stage;
-      if (matchMedia("(hover: hover)").matches) {
-        art.addEventListener("mouseenter", () => { paused = true; root.classList.add("paused"); clearTimeout(timer); });
-        art.addEventListener("mouseleave", () => { paused = false; root.classList.remove("paused"); const p = tabEls[cur].querySelector(".prog"); p.style.animation = "none"; void p.offsetWidth; p.style.animation = ""; schedule(); });
-      }
+  /* ── Mount an animation into any section; it runs only while on screen ── */
+  const mounted = [];
+  let lastData = null;
+  window.ProptionVisuals = {
+    mount(host, type) {
+      if (!host || !FACTORIES[type]) return null;
+      if (!mounted.length) readColors();
+      host.classList.add("viz");
+      const layer = document.createElement("div"); layer.className = "hv active"; host.appendChild(layer);
+      let v;
+      try { v = FACTORIES[type](layer); } catch (err) { console.error("[visual] could not build", type, err); return null; }
+      let on = false;
       new IntersectionObserver(([e]) => {
-        visible = e.isIntersecting;
-        if (cur < 0) return;
-        try { if (visible) { schedule(); visuals[cur].start(); } else { clearTimeout(timer); visuals[cur].stop(); } } catch (err) { console.error("[hero]", err); }
-      }, { threshold: 0.1 }).observe(stage);
-      if (reduce) root.classList.add("still");
-      show(0);
-      this._visuals = visuals;
-      if (this._pending) this.setData(this._pending);
+        try {
+          if (e.isIntersecting && !on) { on = true; v.start(); }
+          else if (!e.isIntersecting && on) { on = false; v.stop(); }
+        } catch (err) { console.error("[visual]", type, err); }
+      }, { threshold: 0.25 }).observe(host);
+      mounted.push(v);
+      if (lastData && v.setData) v.setData(lastData);
+      return v;
     },
-    setData(d) {
-      if (!this._visuals) { this._pending = d; return; }
-      this._visuals.forEach((v) => v.setData && v.setData(d));
-    },
+    setData(d) { lastData = d; mounted.forEach((v) => v.setData && v.setData(d)); },
   };
 })();

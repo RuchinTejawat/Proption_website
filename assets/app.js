@@ -72,8 +72,10 @@
   safe("Hero", () => {
   const H = S.hero;
   $("hero").innerHTML = `
-    <div class="hero-copy-wrap">
-      <div class="hero-copy"></div>
+    <div>
+      <span class="badge">${I.shield}${esc(H.badge)}</span>
+      <h1><span>${esc(H.line1)}</span><span class="g">${esc(H.line2)}</span><span>${esc(H.line3)}</span><span class="o">${esc(H.line4)}</span></h1>
+      <p class="lead">${esc(H.text)}</p>
       <div class="hero-ctas">${btn("#strategies", H.primaryCta)}<a class="btn btn-ghost" href="${esc(S.links.watchDemo)}"${ext(S.links.watchDemo)}>${I.play}${esc(H.secondaryCta)}</a></div>
       <div class="hero-stats">
         <div><div class="v" data-k="returnPct">—</div><div class="l">1Y Return</div></div>
@@ -81,16 +83,8 @@
         <div><div class="v" data-k="sharpe">—</div><div class="l">Sharpe</div></div>
       </div>
     </div>
-    <div class="hero-art">
-      <div class="hero-stage"></div>
-      <div class="hero-tabs" role="tablist" aria-label="Hero highlights"></div>
-    </div>`;
-  window.ProptionHero.mount($("hero"), {
-    slides: H.slides, rotateSeconds: H.rotateSeconds,
-    renderCopy: (sl) => `<span class="badge">${I.shield}${esc(sl.badge)}</span>
-        <h1><span>${esc(sl.line1)}</span><span class="g">${esc(sl.line2)}</span>${sl.line3 ? `<span>${esc(sl.line3)}</span>` : ""}${sl.line4 ? `<span class="o">${esc(sl.line4)}</span>` : ""}</h1>
-        <p class="lead">${esc(sl.text)}</p>`,
-  });
+    <div class="hero-art">${H.visual ? `<div id="viz-hero"></div>` : `<div class="screen">${candleArt()}</div>`}</div>`;
+  if (H.visual) window.ProptionVisuals.mount($("viz-hero"), H.visual);
 
   $("strip").innerHTML = `<div class="container strip-in">
     <div><div class="k-label">1Y Net Return</div><div class="k-val" data-k="returnPct">—</div><div class="k-sub">verified on Zerodha</div></div>
@@ -131,6 +125,7 @@
   $("strategies").innerHTML = `
     <span class="badge">${esc(M.badge)}</span>
     <h2>${esc(M.titleA)} <span class="g">${esc(M.titleB)}</span></h2>
+    ${(M.visuals || []).length ? `<div class="viz-row">${M.visuals.map((v, i) => `<figure class="viz-fig"><div id="viz-s${i}"></div><figcaption><strong>${esc(v.title)}</strong>${esc(v.caption)}</figcaption></figure>`).join("")}</div>` : ""}
     <div class="product" style="margin-top:40px">
       <div><span class="chip">${esc(M.tag)}</span><h3>${esc(M.name)}</h3><p>${esc(M.text)}</p>${feats(M.features)}</div>
       <div class="side">
@@ -144,14 +139,21 @@
         <a class="btn btn-primary btn-block" href="${esc(S.links.bookCall)}"${ext(S.links.bookCall)}>${esc(M.cta)} ${I.arrow}</a>
       </div>
     </div>`;
+  (M.visuals || []).forEach((v, i) => window.ProptionVisuals.mount($("viz-s" + i), v.type));
   });
 
   // ─── Academy ─────────────────────────────────────────────────────────────
   safe("Academy", () => {
   const A = S.academy;
   $("academy").innerHTML = `
-    <span class="badge orange">${I.book}${esc(A.badge)}</span>
-    <h2>${esc(A.titleA)} <span class="o">${esc(A.titleB)}</span></h2>
+    <div class="${A.visual ? "acad-head" : ""}">
+      <div>
+        <span class="badge orange">${I.book}${esc(A.badge)}</span>
+        <h2>${esc(A.titleA)} <span class="o">${esc(A.titleB)}</span></h2>
+        ${A.visual && A.visualCaption ? `<p class="sub" style="margin-bottom:0">${esc(A.visualCaption)}</p>` : ""}
+      </div>
+      ${A.visual ? `<div id="viz-acad"></div>` : ""}
+    </div>
     <div class="product amber" style="margin-top:40px">
       <div><span class="chip">${esc(A.tag)}</span><h3>${esc(A.name)}</h3><p>${esc(A.text)}</p>${feats(A.features)}
       </div>
@@ -162,6 +164,7 @@
         <a class="btn btn-primary btn-block" id="curr-btn" href="${esc(link(S.links.curriculum))}"${ext(S.links.curriculum)}>${esc(A.cta)} ${I.arrow}</a>
       </div>
     </div>`;
+  if (A.visual) window.ProptionVisuals.mount($("viz-acad"), A.visual);
   // Curriculum pop-up
   const CU = A.curriculum;
   if (CU) {
@@ -278,7 +281,7 @@
     const vu = S.links.performanceLink || d.verifiedUrl; if (vu) vl.href = vu; else vl.removeAttribute("href");
     $("updated").textContent = `Live data · auto-synced from verified Zerodha P&L · Last updated ${new Date(d.updatedAt).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" })}`;
     drawChart($("chart"), d.series || [], d.benchmark || []);
-    if (window.ProptionHero) window.ProptionHero.setData(d);
+    if (window.ProptionVisuals) window.ProptionVisuals.setData(d);
   }
 
   // ₹13.29 L / ₹1.20 Cr style
