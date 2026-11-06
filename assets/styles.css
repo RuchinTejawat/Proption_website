@@ -361,12 +361,37 @@ img, svg { display: block; }
 .hv-chain td span { position: relative; }
 .hv-chain .up { animation: hvup .9s ease; } .hv-chain .dn { animation: hvdn .9s ease; }
 @keyframes hvup { from { color: var(--green); } } @keyframes hvdn { from { color: #f0616d; } }
-  border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 12px; cursor: pointer; transition: color .2s, border-color .2s; }
 @media (max-width: 900px) {
   .acad-head { grid-template-columns: 1fr; gap: 28px; }
 }
-@media (max-width: 520px) {
+@media (max-width: 600px) {
+  .viz-curve { aspect-ratio: 4 / 3.4; }
+  .viz-tape { aspect-ratio: 4 / 3.2; }
+  .viz-chain { aspect-ratio: 4 / 5; }
+  .viz-probability { aspect-ratio: 1 / 1; }
+  .viz-probability .hv-prob { left: 12px; right: 12px; display: flex; justify-content: space-between; gap: 8px; text-align: left; font-size: 11px; }
   .hv-chain td, .hv-chain th { padding: 0 4px; } .hv-chain { font-size: 10.5px; }
+  .hv-chain th { font-size: 9.5px; letter-spacing: .06em; }
+  .hv-chain-top { padding: 9px 10px; font-size: 11px; }
   .hv-readout .v { font-size: 20px; }
+  .hv-tape-item { padding: 0 14px; font-size: 11px; }
+  .acad-head { gap: 22px; }
+  .viz-row { gap: 28px; }
 }
 @media (prefers-reduced-motion: reduce) { .hv-tape-track { animation: none; } .hv { transition: none; } }
+
+/* ─── Small phones ───────────────────────────────────────────────────── */
+.kv { gap: 12px; }
+.kv span:last-child { text-align: right; }
+.btn-block { white-space: nowrap; }
+@media (max-width: 400px) {
+  .product { padding: 22px 18px; }
+  .side { padding: 18px 16px; }
+  .side .big { font-size: 30px; }
+  .hero-stats { gap: 22px; }
+  .hero-stats .v { font-size: 20px; }
+  .k-val { font-size: 24px; }
+  .strip-in > div { padding: 18px 14px 20px; }
+  .chart-card { padding: 18px 12px; }
+  .cta-panel { padding: 48px 18px; }
+}

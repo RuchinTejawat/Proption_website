@@ -139,7 +139,7 @@
     if (reduce) { for (let i = 0; i < 700; i++) { let b = 0; for (let r = 0; r < ROWS; r++) b += rnd() < 0.5 ? 0 : 1; bins[b]++; total++; } }
     return canvasVisual(host, (s, now) => {
       const { ctx, w, h } = s; if (!w) return;
-      const top = 24, pegH = h * 0.46, gap = Math.min((w - 40) / (ROWS + 2), 34), gy = pegH / ROWS, cx = w / 2;
+      const top = w < 520 ? 52 : 24, pegH = h * (w < 520 ? 0.42 : 0.46), gap = Math.min((w - 40) / (ROWS + 2), 34), gy = pegH / ROWS, cx = w / 2;
       const pegX = (r, j) => cx + (j - r / 2) * gap, pegY = (r) => top + r * gy;
       const baseY = h - 24, binX = (i) => cx + (i - ROWS / 2) * gap;
       ctx.clearRect(0, 0, w, h);
@@ -219,7 +219,7 @@
     mount(host, type) {
       if (!host || !FACTORIES[type]) return null;
       if (!mounted.length) readColors();
-      host.classList.add("viz");
+      host.classList.add("viz", "viz-" + type);
       const layer = document.createElement("div"); layer.className = "hv active"; host.appendChild(layer);
       let v;
       try { v = FACTORIES[type](layer); } catch (err) { console.error("[visual] could not build", type, err); return null; }
