@@ -220,7 +220,8 @@
       const copy = root.querySelector(".hero-copy"), stage = root.querySelector(".hero-stage"), tabs = root.querySelector(".hero-tabs");
       const visuals = slides.map((sl) => {
         const host = document.createElement("div"); host.className = "hv"; stage.appendChild(host);
-        return (FACTORIES[sl.visual] || curve)(host);
+        try { return (FACTORIES[sl.visual] || curve)(host); }
+        catch (err) { console.error("[hero] could not build", sl.visual, err); return { start() {}, stop() {} }; }
       });
       copy.innerHTML = slides.map((sl, i) => `<div class="hc" data-i="${i}"></div>`).join("");
       const layers = [...copy.children];
@@ -230,23 +231,27 @@
       let cur = -1, timer = 0, paused = false, visible = true;
       const show = (i) => {
         if (i === cur) return;
-        if (cur >= 0) { visuals[cur].stop(); hosts[cur].classList.remove("active"); tabEls[cur].classList.remove("active"); tabEls[cur].setAttribute("aria-selected", "false"); layers[cur].classList.remove("active"); layers[cur].setAttribute("aria-hidden", "true"); }
+        if (cur >= 0) { try { visuals[cur].stop(); } catch (err) {} hosts[cur].classList.remove("active"); tabEls[cur].classList.remove("active"); tabEls[cur].setAttribute("aria-selected", "false"); layers[cur].classList.remove("active"); layers[cur].setAttribute("aria-hidden", "true"); }
         cur = i;
         layers[i].classList.add("active"); layers[i].removeAttribute("aria-hidden");
         hosts[i].classList.add("active"); tabEls[i].classList.add("active"); tabEls[i].setAttribute("aria-selected", "true");
         tabEls[i].style.setProperty("--dur", `${rotateSeconds}s`);
         const prog = tabEls[i].querySelector(".prog"); prog.style.animation = "none"; void prog.offsetWidth; prog.style.animation = "";
-        if (visible) visuals[i].start();
         schedule();
+        if (visible) { try { visuals[i].start(); } catch (err) { console.error("[hero] slide failed:", err); } }
       };
       const schedule = () => { clearTimeout(timer); if (reduce || paused || !visible) return; timer = setTimeout(() => show((cur + 1) % slides.length), rotateSeconds * 1000); };
       tabs.addEventListener("click", (e) => { const b = e.target.closest(".hero-tab"); if (b) show(+b.dataset.i); });
-      root.addEventListener("mouseenter", () => { paused = true; root.classList.add("paused"); clearTimeout(timer); });
-      root.addEventListener("mouseleave", () => { paused = false; root.classList.remove("paused"); const p = tabEls[cur].querySelector(".prog"); p.style.animation = "none"; void p.offsetWidth; p.style.animation = ""; schedule(); });
+      // Pause only while the pointer is on the animation itself (not the whole hero), and only on mouse devices
+      const art = stage;
+      if (matchMedia("(hover: hover)").matches) {
+        art.addEventListener("mouseenter", () => { paused = true; root.classList.add("paused"); clearTimeout(timer); });
+        art.addEventListener("mouseleave", () => { paused = false; root.classList.remove("paused"); const p = tabEls[cur].querySelector(".prog"); p.style.animation = "none"; void p.offsetWidth; p.style.animation = ""; schedule(); });
+      }
       new IntersectionObserver(([e]) => {
         visible = e.isIntersecting;
         if (cur < 0) return;
-        if (visible) { visuals[cur].start(); schedule(); } else { visuals[cur].stop(); clearTimeout(timer); }
+        try { if (visible) { schedule(); visuals[cur].start(); } else { clearTimeout(timer); visuals[cur].stop(); } } catch (err) { console.error("[hero]", err); }
       }, { threshold: 0.1 }).observe(stage);
       if (reduce) root.classList.add("still");
       show(0);
