@@ -72,10 +72,8 @@
   safe("Hero", () => {
   const H = S.hero;
   $("hero").innerHTML = `
-    <div>
-      <span class="badge">${I.shield}${esc(H.badge)}</span>
-      <h1><span>${esc(H.line1)}</span><span class="g">${esc(H.line2)}</span><span>${esc(H.line3)}</span><span class="o">${esc(H.line4)}</span></h1>
-      <p class="lead">${esc(H.text)}</p>
+    <div class="hero-copy-wrap">
+      <div class="hero-copy"></div>
       <div class="hero-ctas">${btn("#strategies", H.primaryCta)}<a class="btn btn-ghost" href="${esc(S.links.watchDemo)}"${ext(S.links.watchDemo)}>${I.play}${esc(H.secondaryCta)}</a></div>
       <div class="hero-stats">
         <div><div class="v" data-k="returnPct">—</div><div class="l">1Y Return</div></div>
@@ -84,9 +82,15 @@
       </div>
     </div>
     <div class="hero-art">
-      <div class="screen">${candleArt()}</div>
-      <div class="verified-pill"><div class="ic">${I.trend}</div><div><div class="t">Verified Net Return</div><div class="v"><span data-k="returnPctSigned">—</span> in 1Y</div></div></div>
+      <div class="hero-stage"></div>
+      <div class="hero-tabs" role="tablist" aria-label="Hero highlights"></div>
     </div>`;
+  window.ProptionHero.mount($("hero"), {
+    slides: H.slides, rotateSeconds: H.rotateSeconds,
+    renderCopy: (sl) => `<span class="badge">${I.shield}${esc(sl.badge)}</span>
+        <h1><span>${esc(sl.line1)}</span><span class="g">${esc(sl.line2)}</span>${sl.line3 ? `<span>${esc(sl.line3)}</span>` : ""}${sl.line4 ? `<span class="o">${esc(sl.line4)}</span>` : ""}</h1>
+        <p class="lead">${esc(sl.text)}</p>`,
+  });
 
   $("strip").innerHTML = `<div class="container strip-in">
     <div><div class="k-label">1Y Net Return</div><div class="k-val" data-k="returnPct">—</div><div class="k-sub">verified on Zerodha</div></div>
@@ -274,6 +278,7 @@
     const vu = S.links.performanceLink || d.verifiedUrl; if (vu) vl.href = vu; else vl.removeAttribute("href");
     $("updated").textContent = `Live data · auto-synced from verified Zerodha P&L · Last updated ${new Date(d.updatedAt).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" })}`;
     drawChart($("chart"), d.series || [], d.benchmark || []);
+    if (window.ProptionHero) window.ProptionHero.setData(d);
   }
 
   // ₹13.29 L / ₹1.20 Cr style

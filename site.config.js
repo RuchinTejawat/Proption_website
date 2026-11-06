@@ -28,15 +28,41 @@ window.SITE = {
     { label: "About", href: "#about" },
   ],
 
+  // ─── Homepage hero: rotating slides ─────────────────────────────────
+  // Each slide has its own text and animation. visual can be:
+  //   "curve" (your live equity curve), "tape" (moving candles),
+  //   "probability" (bell-curve engine) or "chain" (option chain).
+  // Reorder, remove or edit slides freely. rotateSeconds = time per slide.
   hero: {
-    badge: "Quant-led research & market education",
-    line1: "Compound your",
-    line2: "capital.",           // green
-    line3: "Master the",
-    line4: "markets.",           // orange
-    text: "India's research-first fintech delivering institutional-grade quant strategies and a world-class stock market academy — built by quant experts.",
+    rotateSeconds: 9,
     primaryCta: "Explore Strategies",
     secondaryCta: "Watch Demo",
+    slides: [
+      {
+        visual: "curve", tab: "Track record",
+        badge: "Verified on Zerodha",
+        line1: "Compound your", line2: "capital.", line3: "Master the", line4: "markets.",
+        text: "India's research-first fintech delivering institutional-grade quant strategies and a world-class stock market academy — built by quant experts.",
+      },
+      {
+        visual: "tape", tab: "Intraday desk",
+        badge: "Quant-led research & market education",
+        line1: "Markets move", line2: "every second.", line3: "We trade the", line4: "statistics.",
+        text: "Rules-based intraday options on NIFTY 50 and SENSEX, executed automatically in your own demat account. No overnight risk.",
+      },
+      {
+        visual: "probability", tab: "Statistics",
+        badge: "Statistics, not guesswork",
+        line1: "Trade the", line2: "probabilities,", line3: "not the", line4: "noise.",
+        text: "Every trade is one draw from a distribution. We build the edge, size the risk, and let the law of large numbers work.",
+      },
+      {
+        visual: "chain", tab: "Option chain",
+        badge: "Built for option sellers",
+        line1: "Every strike is a", line2: "probability.", line3: "", line4: "",
+        text: "We read open interest, implied volatility and the expected move, then let rules decide where to sell.",
+      },
+    ],
   },
 
   performance: {

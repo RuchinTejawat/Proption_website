@@ -8,7 +8,8 @@ read live from Google Sheets.
 
 | File | What it's for |
 |---|---|
-| `site.config.js` | **All text, prices, links, team, footer.** Edit this for 90% of changes. |
+| `site.config.js` | **All text, prices, links, team, footer, hero slides.** Edit this for 90% of changes. |
+| `assets/hero.js` | The four hero animations (equity curve, market tape, probability engine, option chain). |
 | `functions/api/performance.js` | Reads the Google Sheet and computes the live numbers. Sheet ID / tab / capital at the top. |
 | `assets/styles.css` | Colours and layout. Theme colours are at the top (`--green`, `--orange`, …). |
 | `assets/app.js` | Builds the page from the config. Usually no need to touch. |
