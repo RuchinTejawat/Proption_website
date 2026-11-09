@@ -4,6 +4,8 @@
   const S = window.SITE;
   if (S.theme === "dark") document.documentElement.removeAttribute("data-theme");
   else document.documentElement.setAttribute("data-theme", S.theme || "light");
+  const LOGO = S.theme === "dark" ? "assets/logo-dark.svg" : "assets/logo.svg";
+  { const fav = document.querySelector('link[rel="icon"]'); if (fav) fav.href = (document.body.dataset.base || "") + LOGO + "?v=2"; }
   const BASE = document.body.dataset.base || "";          // "../" on legal pages
   const isHome = !BASE;
   const $ = (id) => document.getElementById(id);
@@ -31,7 +33,7 @@
 
   // ─── Header ──────────────────────────────────────────────────────────────
   $("nav").innerHTML = `<div class="container nav-in">
-      <a class="brand" href="${isHome ? "#hero" : BASE}"><img src="${BASE}assets/logo.svg" alt="">${esc(S.brand.name)}</a>
+      <a class="brand" href="${isHome ? "#hero" : BASE}"><img src="${BASE}${LOGO}" alt="">${esc(S.brand.name)}</a>
       <nav class="nav-links" id="navlinks">${S.nav.map((n) => `<a href="${esc(link(n.href))}">${esc(n.label)}</a>`).join("")}</nav>
       <div style="display:flex;gap:10px;align-items:center">
         ${btn(S.links.bookCall, "Book a Call", "btn-primary btn-sm")}
@@ -46,7 +48,7 @@
   $("footer").innerHTML = `<div class="container">
     <div class="f-grid">
       <div class="f-about">
-        <a class="brand" href="${isHome ? "#hero" : BASE}"><img src="${BASE}assets/logo.svg" alt="">${esc(S.brand.name)}</a>
+        <a class="brand" href="${isHome ? "#hero" : BASE}"><img src="${BASE}${LOGO}" alt="">${esc(S.brand.name)}</a>
         <p>${esc(S.brand.tagline)}</p>
         <div class="f-contact">
           <div>${I.pin}<span>${esc(c.address)}</span></div>

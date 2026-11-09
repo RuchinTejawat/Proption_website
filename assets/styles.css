@@ -493,7 +493,6 @@ body { background: var(--bg); }
 [data-theme="light"] .hv-chain-top { border-color: #22325e; }
 [data-theme="light"] .modal { background: #fff; }
 [data-theme="light"] .hero h1 { font-size: clamp(40px, 5.3vw, 66px); line-height: 1.04; }
-[data-theme="light"] .brand img { filter: hue-rotate(68deg) saturate(1.25); }
 [data-theme="light"] .section h2 { font-size: clamp(30px, 4vw, 46px); }
 /* dark green as the second accent; Nifty and down moves in neutral slate so green stays "ours" */
 [data-theme="light"] { --orange: #8ea2cb; --orange-soft: rgba(11,110,79,.09); }
