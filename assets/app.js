@@ -4,8 +4,8 @@
   const S = window.SITE;
   if (S.theme === "dark") document.documentElement.removeAttribute("data-theme");
   else document.documentElement.setAttribute("data-theme", S.theme || "light");
-  const LOGO = S.theme === "dark" ? "assets/logo-dark.svg" : "assets/logo.svg";
-  { const fav = document.querySelector('link[rel="icon"]'); if (fav) fav.href = (document.body.dataset.base || "") + LOGO + "?v=2"; }
+  const LOGO = (S.theme === "dark" ? "assets/logo-dark.svg" : "assets/logo.svg") + "?v=3";
+  { const fav = document.querySelector('link[rel="icon"]'); if (fav) fav.href = (document.body.dataset.base || "") + LOGO; }
   const BASE = document.body.dataset.base || "";          // "../" on legal pages
   const isHome = !BASE;
   const $ = (id) => document.getElementById(id);
