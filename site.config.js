@@ -6,6 +6,9 @@
 //  you don't type those here (see README → "Live numbers").
 // ═══════════════════════════════════════════════════════════════════════════
 window.SITE = {
+  // Site look: "light" (white, navy, blue, green) or "dark" (black with neon green)
+  theme: "light",
+
   brand: {
     name: "Proption Fintech",
     tagline: "Quant-led research and education firm. See regulatory disclosure below.",

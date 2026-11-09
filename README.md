@@ -16,6 +16,10 @@ read live from Google Sheets.
 | `legal/*.html` | Terms, Privacy, Investor Charter, etc. Edit the text between the ✏️ comments. |
 | `index.html` | Page title, SEO description. |
 
+## Changing the look
+
+In `site.config.js`, set `theme: "light"` (white, navy, blue, dark green) or `theme: "dark"` (black with neon green). Colours for both live in `assets/styles.css` under THEMES.
+
 ## Making a change
 
 1. On github.com open the file (e.g. `site.config.js`) → pencil icon → edit → **Commit changes**.

@@ -2,6 +2,8 @@
 // You normally don't need to edit this file — change text in site.config.js.
 (function () {
   const S = window.SITE;
+  if (S.theme === "dark") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", S.theme || "light");
   const BASE = document.body.dataset.base || "";          // "../" on legal pages
   const isHome = !BASE;
   const $ = (id) => document.getElementById(id);

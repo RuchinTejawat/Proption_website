@@ -395,3 +395,109 @@ img, svg { display: block; }
   .chart-card { padding: 18px 12px; }
   .cta-panel { padding: 48px 18px; }
 }
+
+
+/* ═══ THEMES ══════════════════════════════════════════════════════════════
+   Choose the theme in site.config.js → theme: "light" or "dark".
+   The block below maps colours to tokens; [data-theme="light"] holds the light palette. */
+:root {
+  --accent: var(--green); --accent-hi: #1ee3a3; --accent-ink: #04281c;
+  --text-2: #c9d1d9; --text-3: #d6dde3; --chip-bg: #1b222b; --chip-ink: #dfe5ea;
+  --nav-bg: rgba(11, 15, 20, 0.82);
+  --glow: rgba(18, 217, 154, 0.10); --glow-strong: rgba(18, 217, 154, 0.16);
+  --prod-a: #0f2a26; --prod-b: #101a20; --prod-c: #12171d; --prod-d: #1b1a17;
+  --side-bg: rgba(10, 14, 19, 0.75); --shadow: 0 0 24px rgba(18, 217, 154, 0.25);
+  --grid: #1c2530; --grid-2: #161e27; --axis: #2a3642; --tick: #6b7785;
+  --head-weight: 600; --head-track: -0.03em; --btn-radius: 10px;
+}
+body { background: var(--bg); }
+.nav { background: var(--nav-bg); }
+.btn { border-radius: var(--btn-radius); }
+.btn-primary { background: linear-gradient(180deg, var(--accent-hi), var(--accent)); color: var(--accent-ink); box-shadow: var(--shadow); }
+.btn-primary:hover { box-shadow: var(--shadow); filter: brightness(1.05); }
+.badge { border-color: color-mix(in srgb, var(--green) 40%, transparent); }
+.chip { background: var(--chip-bg); color: var(--chip-ink); }
+.hero::before { background: radial-gradient(600px 380px at 85% 35%, var(--glow), transparent 70%), linear-gradient(var(--bg), var(--bg)); }
+.hero h1, .section h2, .cta-panel h2, .product h3, .modal h3, .doc h1 { font-weight: var(--head-weight); letter-spacing: var(--head-track); }
+.legend, .doc p, .doc li, .mods ol, .tpts, .pbio, .doc td { color: var(--text-2); }
+.feats, .ticks li { color: var(--text-3); }
+.product { background: linear-gradient(135deg, var(--prod-a) 0%, var(--prod-b) 45%, var(--prod-c) 100%); }
+.product.amber { background: linear-gradient(135deg, var(--prod-a) 0%, var(--prod-b) 50%, var(--prod-d) 100%); }
+.side { background: var(--side-bg); }
+.cta-panel { background: radial-gradient(520px 260px at 50% 0%, var(--glow-strong), transparent 70%), var(--card); }
+.reg-box { border-color: color-mix(in srgb, var(--green) 40%, transparent); background: color-mix(in srgb, var(--green) 6%, transparent); }
+.live-dot { background: var(--green); }
+.chart-wrap line[stroke="#1c2530"] { stroke: var(--grid); }
+.chart-wrap line[stroke="#161e27"] { stroke: var(--grid-2); }
+.chart-wrap line[stroke="#2a3642"] { stroke: var(--axis); }
+.chart-wrap text { fill: var(--tick); }
+.chart-wrap path[stroke="#12d99a"], .chart-wrap circle[fill="#12d99a"] { stroke: var(--green); }
+.chart-wrap circle[fill="#12d99a"] { fill: var(--green); stroke: var(--bg); }
+.chart-wrap path[stroke="#f7a531"] { stroke: var(--orange); }
+.chart-wrap stop[stop-color="#12d99a"] { stop-color: var(--green); }
+.chart-wrap stop[stop-color="#f7a531"] { stop-color: var(--orange); }
+.legend .dot[style*="--green"] { background: var(--green) !important; }
+
+
+/* ── Kotak Neo-style: white, navy, bright blue, red accent ───────────── */
+[data-theme="light"] {
+  --bg: #ffffff; --bg-2: #f4f7fe; --card: #ffffff; --line: #e4e9f5; --line-2: #d6deef;
+  --text: #0f1b3d; --muted: #5a6585; --muted-2: #8a93ab; --text-2: #3b4664; --text-3: #1d2950;
+  --green: #0fa968; --green-2: #0fa968; --green-soft: rgba(15,169,104,.09);
+  --orange: #e8212d; --orange-soft: rgba(232,33,45,.08);
+  --accent: #1f5ae6; --accent-hi: #2f6bf2; --accent-ink: #ffffff; --shadow: 0 6px 18px rgba(31,90,230,.22);
+  --glow: rgba(31,90,230,.06); --glow-strong: rgba(31,90,230,.08);
+  --chip-bg: #eaf0ff; --chip-ink: #1f5ae6; --nav-bg: rgba(255,255,255,.96);
+  --prod-a: #ffffff; --prod-b: #ffffff; --prod-c: #ffffff; --prod-d: #ffffff;
+  --side-bg: #f4f7fe; --grid: #e7ecf6; --grid-2: #eef2f9; --axis: #c6cfe2; --tick: #7c86a0;
+  --display: "Poppins", "Inter", sans-serif; --head-weight: 600; --head-track: -0.02em;
+  --font: "Inter", system-ui, sans-serif; --mono: "Inter", system-ui, sans-serif; --btn-radius: 999px; --radius: 18px;
+}
+[data-theme="light"] .hero h1 .g, [data-theme="light"] h2 .g, [data-theme="light"] .cta-panel .g { color: var(--accent); }
+[data-theme="light"] .hero h1 .o, [data-theme="light"] h2 .o { color: var(--orange); }
+[data-theme="light"] .k-val, [data-theme="light"] .hero-stats .v, [data-theme="light"] .side .big, [data-theme="light"] .tile .tv { color: var(--text); font-weight: 700; letter-spacing: -0.01em; }
+[data-theme="light"] .k-val { color: var(--accent); }
+[data-theme="light"] .badge { color: var(--accent); background: #eaf0ff; border-color: transparent; font-weight: 600; }
+[data-theme="light"] .badge.orange { color: var(--orange); background: var(--orange-soft); }
+[data-theme="light"] .btn-ghost { background: #fff; border: 1.5px solid var(--accent); color: var(--accent); }
+[data-theme="light"] .nav { border-bottom: 1px solid var(--line); box-shadow: 0 2px 12px rgba(15,27,61,.05); }
+[data-theme="light"] .nav-links { color: var(--text-3); font-weight: 500; }
+[data-theme="light"] .strip { background: var(--bg-2); border-color: transparent; }
+[data-theme="light"] .strip-in > div { border-color: var(--line-2); }
+[data-theme="light"] .section:nth-of-type(odd) { background: transparent; }
+[data-theme="light"] #strategies, [data-theme="light"] #cta { position: relative; }
+[data-theme="light"] #strategies::before { content: ""; position: absolute; inset: 0 -100vw; background: var(--bg-2); z-index: -1; }
+[data-theme="light"] .section + .section { border-top: 0; }
+[data-theme="light"] .card, [data-theme="light"] .tile, [data-theme="light"] .product { border-color: var(--line); box-shadow: 0 8px 28px rgba(15,27,61,.06); }
+[data-theme="light"] .product { border-radius: 22px; }
+[data-theme="light"] .side { border-color: transparent; border-radius: 16px; }
+[data-theme="light"] .chart-card { border-radius: 22px; }
+[data-theme="light"] .cta-panel { background: linear-gradient(120deg, #1f5ae6, #163fa8); border: 0; color: #fff; }
+[data-theme="light"] .cta-panel h2, [data-theme="light"] .cta-panel .g { color: #fff; }
+[data-theme="light"] .cta-panel p { color: rgba(255,255,255,.85); }
+[data-theme="light"] .cta-panel .btn-primary { background: #fff; color: var(--accent); box-shadow: none; }
+[data-theme="light"] .footer { background: #0f1b3d; color: #dfe5f3; border-top: 0; }
+[data-theme="light"] .footer .f-grid li a, [data-theme="light"] .f-about p, [data-theme="light"] .f-contact div, [data-theme="light"] .f-legal { color: #a9b3cc; }
+[data-theme="light"] .footer .brand, [data-theme="light"] .f-grid h5, [data-theme="light"] .f-legal strong, [data-theme="light"] .reg-box { color: #fff; }
+[data-theme="light"] .reg-box { border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.05); }
+[data-theme="light"] .f-legal a, [data-theme="light"] .f-contact svg { color: #7fa6ff; }
+[data-theme="light"] .f-legal, [data-theme="light"] .f-bottom { border-color: rgba(255,255,255,.12); }
+/* animation panels read like app screens: deep navy */
+[data-theme="light"] .viz { background: #0f1b3d; border-color: #0f1b3d; box-shadow: 0 24px 60px rgba(15,27,61,.22); }
+[data-theme="light"] .hv-tape { background: rgba(10,19,46,.95); border-color: #22325e; }
+[data-theme="light"] .hv-readout .k, [data-theme="light"] .hv-prob, [data-theme="light"] .hv-chain-top { color: #9fb0d6; }
+[data-theme="light"] .hv-readout .v { color: #4ade80; font-family: "Inter", sans-serif; font-weight: 700; }
+[data-theme="light"] .hv-prob b, [data-theme="light"] .hv-chain-top b, [data-theme="light"] .hv-chain td.k { color: #fff; }
+[data-theme="light"] .hv-chain td { color: #c9d4ee; }
+[data-theme="light"] .hv-chain th { color: #7e8db3; }
+[data-theme="light"] .hv-chain-top { border-color: #22325e; }
+[data-theme="light"] .modal { background: #fff; }
+[data-theme="light"] .hero h1 { font-size: clamp(40px, 5.3vw, 66px); line-height: 1.04; }
+[data-theme="light"] .brand img { filter: hue-rotate(68deg) saturate(1.25); }
+[data-theme="light"] .section h2 { font-size: clamp(30px, 4vw, 46px); }
+/* dark green as the second accent; Nifty and down moves in neutral slate so green stays "ours" */
+[data-theme="light"] { --orange: #8ea2cb; --orange-soft: rgba(11,110,79,.09); }
+[data-theme="light"] .hero h1 .o, [data-theme="light"] h2 .o { color: #0b6e4f; }
+[data-theme="light"] .badge.orange { color: #0b6e4f; background: rgba(11,110,79,.10); }
+[data-theme="light"] .legend .o { color: #6b7fa8; }
+[data-theme="light"] .hv-readout .s { color: #a9b8db; }
