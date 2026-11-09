@@ -62,7 +62,7 @@ window.SITE = {
       { icon: "sun", strong: "", text: "Pure Intraday · No overnight risk" },
       { icon: "shield", strong: "", text: "Research-backed quant strategy" },
     ],
-    minCapital: "₹10 Lakhs",
+    minCapital: "₹25 Lakhs",
     // Animations shown above the strategy card ("tape" = intraday candles, "chain" = option chain).
     // Remove an entry to hide it.
     visuals: [
